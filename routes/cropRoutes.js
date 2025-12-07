@@ -14,8 +14,8 @@ const router = express.Router();
 router.use(protect);
 
 router.get("/", getCropPlans);
-router.get("/:id", getCropPlan);
 router.post("/", createCropPlan);
+router.get("/:id", getCropPlan);
 router.put("/:id", updateCropPlan);
 router.delete("/:id", deleteCropPlan);
 

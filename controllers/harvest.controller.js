@@ -1,6 +1,6 @@
 import db from "../models/index.js";
 const { Harvest, CropPlan, User, Sequelize } = db;
-const { Op } = Sequelize;
+import { Op } from 'sequelize';
 
 export const getHarvestRecords = async (req, res) => {
   try {

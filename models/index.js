@@ -1,4 +1,6 @@
 import { Sequelize, DataTypes } from "sequelize";
+import dotenv from "dotenv";
+dotenv.config();
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -19,12 +21,12 @@ const sequelize = new Sequelize(
 const db = { sequelize, DataTypes };
 
 // import models
-db.User = (await import("./user.model.js")).default(sequelize, DataTypes);
+db.User = (await import("./auth.model.js")).default(sequelize, DataTypes);
 db.CropPlan = (await import("./crop.model.js")).default(sequelize, DataTypes);
 db.FarmTransaction = (await import("./farm.model.js")).default(sequelize, DataTypes);
 db.Harvest = (await import("./harvest.model.js")).default(sequelize, DataTypes);
 db.Input = (await import("./inputs.model.js")).default(sequelize, DataTypes);
-db.Message = (await import("./message.model.js")).default(sequelize, DataTypes);
+db.Message = (await import("./message.js")).default(sequelize, DataTypes);
 db.Role = (await import("./role.model.js")).default(sequelize, DataTypes);
 db.Order = (await import("./order.model.js")).default(sequelize, DataTypes);
 db.OrderItem = (await import("./orderItem.model.js")).default(sequelize, DataTypes);
