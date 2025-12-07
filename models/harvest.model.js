@@ -1,59 +1,19 @@
-import mongoose from "mongoose";
-
-const harvestSchema = new mongoose.Schema(
-  {
-    cropPlan: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "CropPlan",
-      required: true,
+export default (sequelize, DataTypes) => {
+  return sequelize.define(
+    "Harvest",
+    {
+      id: { type: DataTypes.BIGINT, autoIncrement: true, primaryKey: true },
+      crop_plan_id: { type: DataTypes.BIGINT },
+      cropName: { type: DataTypes.STRING(255), field: "crop_name", allowNull: false },
+      harvestDate: { type: DataTypes.DATEONLY, field: "harvest_date", allowNull: false },
+      actualYield: { type: DataTypes.DOUBLE, field: "actual_yield", allowNull: false },
+      quality: { type: DataTypes.STRING(255), allowNull: false },
+      marketPrice: { type: DataTypes.DOUBLE, field: "market_price", allowNull: false },
+      totalRevenue: { type: DataTypes.DOUBLE, field: "total_revenue", allowNull: false },
+      storageLocation: { type: DataTypes.STRING(255), field: "storage_location" },
+      notes: { type: DataTypes.TEXT },
+      created_by: { type: DataTypes.BIGINT },
     },
-    cropName: {
-      type: String,
-      required: true,
-    },
-    harvestDate: {
-      type: Date,
-      required: true,
-    },
-    actualYield: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-    quality: {
-      type: String,
-      required: true,
-    },
-    marketPrice: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-    totalRevenue: {
-      type: Number,
-      required: true,
-    },
-    storageLocation: {
-      type: String,
-    },
-    notes: {
-      type: String,
-    },
-    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true, // Made optional
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
-
-// Calculate total revenue before saving
-harvestSchema.pre('save', function(next) {
-  this.totalRevenue = this.actualYield * this.marketPrice;
-  next();
-});
-
-export default mongoose.model("Harvest", harvestSchema);
+    { tableName: "harvests", timestamps: true, underscored: true }
+  );
+};

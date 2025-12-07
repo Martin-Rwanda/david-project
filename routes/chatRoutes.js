@@ -1,8 +1,8 @@
-// routes/chat.js
 import express from "express";
-import Message from "../models/Message.js";
-import User from "../models/auth.model.js";
+import db from "../models/index.js";
 import { getBotReply } from "../services/openrouterService.js";
+
+const { User, Message } = db;
 
 const router = express.Router();
 
@@ -14,32 +14,32 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    // 🔍 Check or create user
-    let user = await User.findOne({ email });
+    // 🔍 Check user by email
+    const user = await User.findOne({ where: { email } });
+
     if (!user) {
       return res.status(404).json({ error: "User not found." });
     }
 
-    // 💬 Save user message
-    const userMessage = new Message({
-      user: user._id,
+    // 💬 Save the user's message
+    const userMessage = await Message.create({
+      user_id: user.id,
       sender: "user",
       content: content.trim(),
     });
-    await userMessage.save();
 
-    // 🤖 Get bot reply
+    // 🤖 Get AI bot reply
     const botReply = await getBotReply(content);
 
-    // 💬 Save bot message
-    const botMessage = new Message({
-      user: user._id,
+    // 💬 Save bot's message
+    const botMessage = await Message.create({
+      user_id: user.id,
       sender: "bot",
       content: botReply,
     });
-    await botMessage.save();
 
-    res.json({ message: botReply });
+    res.status(200).json({ message: botReply });
+
   } catch (err) {
     console.error("❌ Chat error:", err.message);
     res.status(500).json({ error: "Something went wrong. Please try again later." });

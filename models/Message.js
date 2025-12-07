@@ -1,15 +1,13 @@
-// models/Message.js
-import mongoose from "mongoose";
-
-const messageSchema = new mongoose.Schema(
-  {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    sender: { type: String, enum: ["user", "bot"], required: true },
-    content: { type: String, required: true },
-    type: { type: String, enum: ["text", "info"], default: "text" },
-  },
-  { timestamps: true }
-);
-
-const Message = mongoose.models.Message || mongoose.model("Message", messageSchema);
-export default Message;
+export default (sequelize, DataTypes) => {
+  return sequelize.define(
+    "Message",
+    {
+      id: { type: DataTypes.BIGINT, autoIncrement: true, primaryKey: true },
+      user_id: { type: DataTypes.BIGINT },
+      sender: { type: DataTypes.ENUM("user", "bot") },
+      content: { type: DataTypes.TEXT, allowNull: false },
+      type: { type: DataTypes.ENUM("text", "info"), defaultValue: "text" },
+    },
+    { tableName: "messages", timestamps: true, underscored: true }
+  );
+};

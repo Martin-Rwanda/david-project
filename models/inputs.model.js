@@ -1,18 +1,14 @@
-import mongoose from "mongoose";
-
-const InputsSchema = new mongoose.Schema(
-  {
-    Inputdate: { type: Date, default: Date.now },
-    Name: { type: String, required: true },
-    amount: { type: Number, required: true },
-    description: { type: String },
-    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+export default (sequelize, DataTypes) => {
+  return sequelize.define(
+    "Input",
+    {
+      id: { type: DataTypes.BIGINT, autoIncrement: true, primaryKey: true },
+      inputDate: { type: DataTypes.DATE, field: "input_date", defaultValue: DataTypes.NOW },
+      name: { type: DataTypes.STRING(255), allowNull: false },
+      amount: { type: DataTypes.DOUBLE, allowNull: false },
+      description: { type: DataTypes.TEXT },
+      created_by: { type: DataTypes.BIGINT },
     },
-  },
-  { timestamps: true }
-);
-
-export default mongoose.model("Inputs", InputsSchema);
+    { tableName: "inputs", timestamps: true, underscored: true }
+  );
+};

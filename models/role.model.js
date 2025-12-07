@@ -1,45 +1,14 @@
-import mongoose from 'mongoose';
-
-const roleSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true
-  },
-  description: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  permissions: [{
-    type: String,
-    required: true
-  }],
-  userCount: {
-    type: Number,
-    default: 0
-  },
-  isSystem: {
-    type: Boolean,
-    default: false
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
-  }
-});
-
-// Update the updatedAt field on save
-roleSchema.pre('save', function(next) {
-  this.updatedAt = Date.now();
-  next();
-});
-
-const Role = mongoose.model('Role', roleSchema);
-
-export default Role;
+export default (sequelize, DataTypes) => {
+  return sequelize.define(
+    "Role",
+    {
+      id: { type: DataTypes.BIGINT, autoIncrement: true, primaryKey: true },
+      name: { type: DataTypes.STRING(255), unique: true, allowNull: false },
+      description: { type: DataTypes.TEXT, allowNull: false },
+      permissions: { type: DataTypes.JSON, allowNull: false },
+      userCount: { type: DataTypes.INTEGER, defaultValue: 0, field: "user_count" },
+      isSystem: { type: DataTypes.BOOLEAN, defaultValue: false, field: "is_system" },
+    },
+    { tableName: "roles", timestamps: true, underscored: true }
+  );
+};
